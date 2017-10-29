@@ -3,6 +3,9 @@ import cb
 import sound
 import struct
 
+TM_SERVICE_UUID = '00FF'
+TM_CHAR_UUID = 'FF01'
+
 class MyCentralManagerDelegate (object):
 	def __init__(self):
 		self.peripheral = None
@@ -13,9 +16,9 @@ class MyCentralManagerDelegate (object):
 		print('+++ Discovered peripheral: %s (%s)' % (p.name, p.uuid))
 		if p.name and 'ESP_THERMOMETER' in p.name and not self.peripheral:
 			# Keep a reference to the peripheral, so it doesn't get garbage-collected:
-				self.peripheral = p
-				cb.connect_peripheral(self.peripheral)
-				text_state.text = 'Detected'
+			self.peripheral = p
+			cb.connect_peripheral(self.peripheral)
+			text_state.text = 'Detected'
 
 	def did_connect_peripheral(self, p):
 		print('*** Connected: %s' % p.name)
@@ -31,14 +34,14 @@ class MyCentralManagerDelegate (object):
 
 	def did_discover_services(self, p, error):
 		for s in p.services:
-			if '00FF' in s.uuid:
+			if TM_SERVICE_UUID in s.uuid:
 				print('+++ Thermometer found')
 				p.discover_characteristics(s)
 
 	def did_discover_characteristics(self, s, error):
-		if '00FF' in s.uuid:
+		if TM_SERVICE_UUID in s.uuid:
 			for c in s.characteristics:
-				if 'FF01' in c.uuid:
+				if TM_CHAR_UUID in c.uuid:
 					print('read temperature sensor...')
 					self.peripheral.read_characteristic_value(c)
 
@@ -48,11 +51,11 @@ class MyCentralManagerDelegate (object):
 
 	def did_update_value(self, c, error):
 		global text_temp
-		if 'FF01' == c.uuid:
+		if TM_CHAR_UUID == c.uuid:
 			# 
-				self.temp = (c.value[0] + (c.value[1]*256))/16
-				print(self.temp)
-				text_temp.text=(str(self.temp) + '℃')
+			self.temp = (c.value[0] + (c.value[1]*256))/16
+			print(self.temp)
+			text_temp.text=(str(self.temp) + '℃')
 
 view = ui.View()                                      
 view.name = 'THERMOMETER'                                    
@@ -84,4 +87,4 @@ try:
 	while True: pass
 except KeyboardInterrupt:
 	# Disconnect everything:
-		cb.reset()
+	cb.reset()
