@@ -4,7 +4,7 @@ from bluepy.btle import BTLEException
 from time import sleep
 import sys
 
-ESP_MAC_ADDR = "BLE_MAC_ADDRESS"
+ESP_MAC_ADDR = "ESP32_MAC_ADDRESS"
 CONNECTION_RETRY = 5
 
 def s8(value):
@@ -53,4 +53,4 @@ print('X=' + str(x) + ' Y=' + str(y) + ' Z=' + str(z))
 
 if judge(x, y)==True:
     print('Door key is opened!!')
-    requests.post('https://maker.ifttt.com/trigger/door_key_opened/with/key/MZX8aaqwNrtki4NynulzE')
+    requests.post('https://maker.ifttt.com/trigger/door_key_opened/with/key/your_ifttt_key')
