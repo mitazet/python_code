@@ -1,6 +1,6 @@
 from slacker import Slacker
 
-token = "xoxb-87096200673-iz0rDH8bKYieCGojbrrncmyZ"
+token = "set_your_token" 
 slacker = Slacker(token)
 channel_name = "#" + "general"
 
